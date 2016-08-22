@@ -79,16 +79,13 @@ app.get("/api/latest/imagesearch", (req, res)=>{
 	mongo.connect(dbUrl, function (err, db){
 		var searches = db.collection('imgSearches');
 		searches.find({},{term: 1, when: 1, _id: 0}).limit(10).sort({_id:-1}).toArray(function (err, document){
-			res.send(document)
+			res.send(JSON.stringify(document))
 		});
 		db.close()
 	})
 	
 })
 
-app.get("/favicon.ico", (req, res )=>{
-
-})
 
 app.get("/", (req, res)=>{
 	res.send("MAIN")
