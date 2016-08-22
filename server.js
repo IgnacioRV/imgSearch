@@ -7,8 +7,8 @@ var https = require('https');
 app.set('port', (process.env.PORT || 5000));
 
 app.get("/api/imagesearch/:terms", (req,resp)=>{
+	/*
 	var terms = req.params.terms
-	
 	res.send("You're searching " + terms)
 	var page = ""
 	if (req.query.offset) page = "/"+req.query.offset 
@@ -76,14 +76,14 @@ app.get("/api/imagesearch/:terms", (req,resp)=>{
 
 app.get("/api/latest/imagesearch", (req, res)=>{
 	res.send("SEARCH HISTORY")
-	/* mongo.connect(dbUrl, function (err, db){
+	mongo.connect(dbUrl, function (err, db){
 		var searches = db.collection('imgSearches');
 		searches.find({},{term: 1, when: 1, _id: 0}).limit(10).sort({_id:-1}).toArray(function (err, document){
 			res.send(document)
 		});
 		db.close()
 	})
-	*/
+	
 })
 
 app.get("/favicon.ico", (req, res )=>{
