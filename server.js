@@ -5,7 +5,6 @@ var dbUrl = process.env.MONGOLAB_URI
 var https = require('https');
 
 app.set('port', (process.env.PORT || 5000));
-app.use(express.static('landingPage'));
 
 app.get("/api/imagesearch/:terms", (req,resp)=>{
 	var terms = req.params.terms
@@ -75,6 +74,7 @@ app.get("/api/imagesearch/:terms", (req,resp)=>{
 
 
 app.get("/api/latest/imagesearch", (req, res)=>{
+	console.log("SEARCH HISTORY")
 	mongo.connect(dbUrl, function (err, db){
 		var searches = db.collection('imgSearches');
 		searches.find({},{term: 1, when: 1, _id: 0}).limit(10).sort({_id:-1}).toArray(function (err, document){
@@ -89,7 +89,7 @@ app.get("/favicon.ico", (req, res )=>{
 })
 
 app.get("/", (req, res)=>{
-
+	console.log("MAIN")
 })
 
 app.listen(app.get('port'), function() {
