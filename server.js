@@ -2,16 +2,17 @@ var express = require('express')
 var app = express()
 var mongo = require('mongodb').MongoClient
 var dbUrl = process.env.MONGOLAB_URI
-var http = require('http');
+var https = require('https');
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static('landingPage'));
 
-app.get("/api/imagesearch/:terms", (req,res)=>{
-	var terms = req.params.terms.split(' ')
-	console.log(terms)
-	console.log(req.query.offset)
-
+app.get("/api/imagesearch/:terms", (req,resp)=>{
+	var terms = req.params.terms
+	console.log("terms: " + terms)
+	console.log("offset: " + req.query.offset)
+	var page = ""
+	if (req.query.offset) page = "/"+req.query.offset 
 	/*
 	We'll use an image search api and process the results to show them as a JSON file
 	Possible img search API's 
@@ -38,16 +39,37 @@ app.get("/api/imagesearch/:terms", (req,res)=>{
 	*/
 	var options = {
   		host: 'api.imgur.com',
-  		path: '/3/gallery/search/2?q=cats',
+  		path: '/3/gallery/search/top'+page+'?q=' + req.params.terms.replace(/ /g,'+'),
   		headers: {
 		    'Content-Type': 'application/json',
+		    'Authorization': 'Client-ID d98ca8a3b977439'
 		  }
 	};
-
-	var req = http.request(options, function(res) {
+	var total = "";
+	var req = https.request(options, function(res) {
 	  res.on('data', function (chunk) {
-    	console.log('BODY: ' + chunk);
-  		});
+	  	total += chunk
+	  });
+	  res.on('end', () => {
+	  	var v = []
+    	var json = eval("(" + total + ")");
+    	json.data.forEach(function (obj, index){
+    		if (obj.is_album){
+	    		var subObj = {
+	    			"url" : "http://imgur.com/"+obj.cover+".jpg",
+	    			"snippet": obj.title,
+	    			"thumbnail": "http://imgur.com/"+obj.cover+"s.jpg",
+	    			"context": obj.link
+	    		}
+	    		console.log(subObj)
+	    		v.push(subObj)
+	    		console.log(v)
+    		}
+    	})
+    	console.log(typeof(json))
+    	resp.send(v)
+    	console.log(v)
+    	});
 	});
 	req.end()
 
