@@ -18,35 +18,22 @@ app.get("/api/imagesearch/:terms", (req,resp)=>{
 	Possible img search API's 
 		- Google -> Confusing documentation	
 		- Bing -> Node module @ https://github.com/dudleycarr/bing-search/blob/master/README.md (almost too easy)
-		- Imgur -> Always free for non-commercial usage & well documented
+		- Imgur -> Always free for non-commercial usage & well documented 
 
-	To get the data from the API we use http.request from the http module, here's an example:
-
-	var options = {
-  		host: 'jsonplaceholder.typicode.com',
-  		path: '/posts/1',
-  		headers: {
-		    'Content-Type': 'application/json',
-		  }
-	};
-
-	var req = http.request(options, function(res) {
-	  res.on('data', function (chunk) {
-    	console.log('BODY: ' + chunk);
-  		});
-	});
-	req.end()
+	To get the data from the API we use https.request from the https module
+	
+	TODO: Save the search terms on a db
 	*/
 	var options = {
   		host: 'api.imgur.com',
   		path: '/3/gallery/search/top'+page+'?q=' + req.params.terms.replace(/ /g,'+'),
   		headers: {
 		    'Content-Type': 'application/json',
-		    'Authorization': 'Client-ID d98ca8a3b977439'
+		    'Authorization': 'Client-ID '+process.env.IMGUR_API
 		  }
 	};
 	var total = "";
-	var req = https.request(options, function(res) {
+	var reqs = https.request(options, function(res) {
 	  res.on('data', function (chunk) {
 	  	total += chunk
 	  });
@@ -61,23 +48,41 @@ app.get("/api/imagesearch/:terms", (req,resp)=>{
 	    			"thumbnail": "http://imgur.com/"+obj.cover+"s.jpg",
 	    			"context": obj.link
 	    		}
-	    		console.log(subObj)
-	    		v.push(subObj)
-	    		console.log(v)
-    		}
+	    			v.push(subObj)
+	    	}
     	})
-    	console.log(typeof(json))
+    	
     	resp.send(v)
-    	console.log(v)
+
     	});
 	});
-	req.end()
+	reqs.end()
+	
+	mongo.connect(dbUrl, function (err, db){
+		var searches = db.collection('imgSearches');
+		searches.insert({
+			"term" : terms, 
+			"when" : new Date()
+		}, function (err, data){
 
+		});
+		db.close()
+	})
 	
 
 
 })
 
+
+app.get("/api/latest/imagesearch", (req, res)=>{
+	mongo.connect(dbUrl, function (err, db){
+		var searches = db.collection('imgSearches');
+		searches.find({},{term: 1, when: 1, _id: 0}).limit(10).sort({_id:-1}).toArray(function (err, document){
+			res.send(document)
+		});
+		db.close()
+	})
+})
 
 app.get("/favicon.ico", (req, res )=>{
 
