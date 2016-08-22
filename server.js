@@ -9,7 +9,6 @@ app.set('port', (process.env.PORT || 5000));
 app.get("/api/imagesearch/:terms", (req,resp)=>{
 	
 	var terms = req.params.terms
-	res.send("You're searching " + terms)
 	var page = ""
 	if (req.query.offset) page = "/"+req.query.offset 
 	/*
