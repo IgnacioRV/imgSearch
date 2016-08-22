@@ -89,7 +89,7 @@ app.get("/favicon.ico", (req, res )=>{
 })
 
 app.get("/", (req, res)=>{
-	console.log("MAIN")
+	res.send("MAIN")
 })
 
 app.listen(app.get('port'), function() {
