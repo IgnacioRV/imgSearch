@@ -57,7 +57,7 @@ app.get("/api/imagesearch/:terms", (req,resp)=>{
     	});
 	});
 	reqs.end()
-	mongo.connect(dbUrl, function (err, db){
+	/*mongo.connect(dbUrl, function (err, db){
 		var searches = db.collection('imgSearches');
 		searches.insert({
 			"term" : terms, 
@@ -67,7 +67,7 @@ app.get("/api/imagesearch/:terms", (req,resp)=>{
 		});
 		db.close()
 	})
-
+*/
 })
 
 
