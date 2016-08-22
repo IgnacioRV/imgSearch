@@ -3,7 +3,7 @@ var app = express()
 var mongo = require('mongodb').MongoClient
 var dbUrl = process.env.MONGOLAB_URI
 var https = require('https');
-
+app.use(express.static('mainPage'))
 app.set('port', (process.env.PORT || 5000));
 
 app.get("/api/imagesearch/:terms", (req,resp)=>{
@@ -43,7 +43,7 @@ app.get("/api/imagesearch/:terms", (req,resp)=>{
     	json.data.forEach(function (obj, index){
     		if (obj.is_album){
 	    		var subObj = {
-	    			"url" : "http://imgur.com/"+obj.cover+".jpg",
+	    			"url" : "http://i.imgur.com/"+obj.cover+".jpg",
 	    			"snippet": obj.title,
 	    			"thumbnail": "http://imgur.com/"+obj.cover+"s.jpg",
 	    			"context": obj.link

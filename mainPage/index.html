@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>picfinder main page</title>
+    
+    
+    
+    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+
+        <link rel="stylesheet" href="css/style.css">
+
+    
+    
+    
+  </head>
+
+  <body>
+
+    <h1 class = "text-center title" >Picfinder</h1>
+<h4 class = "text-center title">by Ignacio Rasche</h4>
+
+<div class = "well container" id = "description">
+  <h3>Instructions:</h3>
+ <h5> Add the search terms to the following url, if you want you can also choose a page offset: <br> <br>
+  http://picfind.herokuapp.com/api/imagesearch/SEARCH_TERMS{?offset=PAGE_OFFSET} <br> <br>
+  
+To see a log of the latest searches you can go to:
+   <a href = "http://picfind.herokuapp.com/api/latest/imagesearch">http://picfind.herokuapp.com/api/latest/imagesearch</a>
+  </h5></div>
+<div class = "well container container-fluid" id = "fields">
+  <input type = "text" placeholder ="Enter search terms" id = "terms"> </lnspac>Page offset:
+<input class = "" type = "number" min = 0 id = "offset" value=0><button onclick = "run()" class = "btn"> Search Images</button>
+
+<button onclick = "log()" class = "btn"> View search log</button></div>
+    <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+
+        <script src="js/index.js"></script>
+
+    
+    
+    
+  </body>
+</html>
